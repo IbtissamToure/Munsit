@@ -3,7 +3,7 @@
 An AI-powered system that translates Arabic speech and sign language in real time to support deaf and hard-of-hearing students in Arab universities.
 
 ## The Problem
-Deaf students in Arab universities attend lectures and pass exams, but remain excluded from discussions, events, and social interactions due to a single barrier — the language of the moment.
+Deaf students in Arab universities attend lectures and pass exams, but remain excluded from discussions, events, and social interactions due to a single barrier the language of the moment.
 
 ## The Solution
 A smart system combining three AI modules:

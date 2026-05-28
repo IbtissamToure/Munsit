@@ -5,3 +5,6 @@ __pycache__/
 *.pth
 .DS_Store
 data/signs/ 
+data/audio_samples/
+data/*.npy
+models/*.pth 

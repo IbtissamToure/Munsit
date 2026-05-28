@@ -21,4 +21,4 @@ A smart system combining three AI modules:
 | Streamlit | Web interface |
 
 ## Project Status
-🚧 Under active development — Day 4 of 14
+🚧 Under active development — Day 6 of 14

@@ -2,8 +2,8 @@
 
 An AI-powered system that translates Arabic speech and sign language in real time to support deaf and hard-of-hearing students in Arab universities.
 
-## The Problem
-Deaf students in Arab universities attend lectures and pass exams, but remain excluded from discussions, events, and social interactions due to a single barrier the language of the moment.
+## Motivation
+Deaf and hard-of-hearing students in Arab universities face a persistent communication barrier — not in academics, but in everything around it. Lectures are accessible, but real-time conversations, group discussions, and social events are not. Existing solutions address translation in isolation; Munsit integrates speech recognition, sign language detection, and environmental audio analysis into a single real-time system designed for Arabic-speaking contexts.
 
 ## The Solution
 A smart system combining three AI modules:

@@ -10,9 +10,21 @@ import soundfile as sf
 import librosa
 import tempfile
 import os
+import pyttsx3
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def speak(text):
+    def run():
+        engine = pyttsx3.init()
+        engine.setProperty('rate', 150)
+        engine.say(text)
+        engine.runAndWait()
+        engine.stop()
+    t = threading.Thread(target=run, daemon=True)
+    t.start()
 
 CLASSES = ['ALIF', 'BAA', 'TA', 'THA', 'JEEM', 'HAA', 'KHAA',
            'DELL', 'DHELL', 'RAA', 'ZAY', 'SEEN', 'SHEEN', 'SAD',
@@ -64,26 +76,22 @@ class MunsitPipeline:
     def __init__(self):
         self.device = torch.device("cpu")
 
-        # load whisper
         self.whisper_model = whisper.load_model(
             os.getenv("WHISPER_MODEL", "base")
         )
 
-        # load sign model
         self.sign_model = SignClassifier().to(self.device)
         self.sign_model.load_state_dict(
             torch.load("models/sign_classifier.pth", map_location=self.device)
         )
         self.sign_model.eval()
 
-        # load audio model
         self.audio_model = AudioCNN().to(self.device)
         self.audio_model.load_state_dict(
             torch.load("models/audio_cnn.pth", map_location=self.device)
         )
         self.audio_model.eval()
 
-        # mediapipe
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.hands = self.mp_hands.Hands(
@@ -93,11 +101,12 @@ class MunsitPipeline:
             min_tracking_confidence=0.7
         )
 
-        # shared state
         self.current_text = ""
         self.current_sign = ""
         self.current_audio_event = ""
         self.lock = threading.Lock()
+        self.last_sign = ""
+        self.last_sign_time = 0
 
     def transcribe_audio(self, duration=5):
         sample_rate = 16000
@@ -125,8 +134,13 @@ class MunsitPipeline:
             x = torch.FloatTensor(landmarks).unsqueeze(0).to(self.device)
             with torch.no_grad():
                 pred = self.sign_model(x).argmax(dim=1).item()
-            with self.lock:
-                self.current_sign = CLASSES[pred]
+            current_time = time.time()
+            if CLASSES[pred] != self.last_sign or current_time - self.last_sign_time > 1.5:
+                with self.lock:
+                    self.current_sign = CLASSES[pred]
+                speak(CLASSES[pred])
+                self.last_sign = CLASSES[pred]
+                self.last_sign_time = current_time
             self.mp_drawing.draw_landmarks(
                 frame,
                 results.multi_hand_landmarks[0],
